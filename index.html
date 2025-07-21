@@ -9,9 +9,65 @@
     body { font-family: Arial, sans-serif; line-height: 1.6; background: #f8f9fa; color: #333; }
     header { background: #003366; color: #fff; padding: 2rem; text-align: center; }
     header h1 { font-size: 2.5rem; }
-    nav { background: #00509e; display: flex; justify-content: center; flex-wrap: wrap; }
-    nav a { color: #fff; padding: 1rem 2rem; text-decoration: none; transition: background 0.3s; }
-    nav a:hover { background: #003f7f; }
+
+    /* --- Modern Navigation Bar --- */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: #00509e;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1100px;
+      margin: auto;
+      padding: 0.5rem 1rem;
+    }
+    .nav-logo {
+      color: #fff;
+      font-size: 1.5rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .nav-menu {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+    }
+    .nav-menu li a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    .nav-menu li a:hover {
+      color: #ffcc00;
+    }
+    .nav-toggle {
+      display: none;
+      font-size: 2rem;
+      color: #fff;
+      cursor: pointer;
+    }
+    @media (max-width: 768px) {
+      .nav-menu {
+        flex-direction: column;
+        background: #00509e;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        display: none;
+        padding: 1rem 0;
+      }
+      .nav-menu.active { display: flex; }
+      .nav-toggle { display: block; }
+    }
+    html { scroll-behavior: smooth; }
+
     section { padding: 2rem; max-width: 1100px; margin: auto; }
     h2 { color: #00509e; margin-bottom: 1rem; }
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
@@ -30,6 +86,11 @@
     .panel { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; background: #e9ecef; padding: 0 1rem; border-radius: 5px; margin-bottom: 1rem; }
     .panel a { color: #003366; padding: 0.5rem 0; display: block; font-weight: normal; }
 
+    /* Workflow List Alignment */
+    .workflow-list { margin-left: 1.2rem; padding-left: 1rem; }
+    .workflow-list li { margin-bottom: 1rem; line-height: 1.5; }
+    .workflow-list ul { margin-top: 0.5rem; margin-left: 1.5rem; list-style: disc; }
+
     /* Gallery Styling */
     .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
     .gallery img { width: 100%; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.3s ease; }
@@ -42,9 +103,7 @@
     .close-btn { position: absolute; top: 30px; right: 40px; font-size: 2rem; color: #fff; text-decoration: none; font-weight: bold; }
     .close-btn:hover { color: #ffcc00; }
 
-    @media (max-width: 768px) {
-      header h1 { font-size: 2rem; }
-    }
+    @media (max-width: 768px) { header h1 { font-size: 2rem; } }
   </style>
 </head>
 <body>
@@ -52,20 +111,122 @@
     <h1>ShopSecure GRC Framework</h1>
     <p>Governance, Risk, and Compliance for a Secure E-commerce Platform</p>
   </header>
-  <nav>
-    <a href="#overview">Overview</a>
-    <a href="#risk">Risk Assessment</a>
-    <a href="#framework">GRC Framework</a>
-    <a href="#recommendations">Recommendations</a>
-    <a href="#attachments">Attachments</a>
-    <a href="#gallery">Gallery</a>
+
+  <!-- Updated Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-logo" onclick="window.scrollTo({top:0,behavior:'smooth'})">ShopSecure</div>
+      <div class="nav-toggle" id="nav-toggle">&#9776;</div>
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#infrastructure">Infrastructure</a></li>
+        <li><a href="#workflow">Workflow</a></li>
+        <li><a href="#risk">Risk Assessment</a></li>
+        <li><a href="#framework">GRC Framework</a></li>
+        <li><a href="#recommendations">Recommendations</a></li>
+        <li><a href="#attachments">Attachments</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+      </ul>
+    </div>
   </nav>
 
   <section id="overview">
     <h2>Overview</h2>
     <p><strong>ShopSecure</strong> is a fictional e-commerce startup with 50 employees, leveraging AWS S3 and EC2.  
-    The GRC framework is designed to mitigate risks, achieve ISO 27001/NIST CSF compliance, and reduce incidents by 20% in 6 months.</p>
+    The GRC framework is designed to mitigate risks, achieve ISO 27001/NIST CSF compliance, and reduce incidents by 20% in pre-defined timespan.</p>
   </section>
+
+  <section id="infrastructure">
+    <h2>AWS Infrastructure Overview</h2>
+    <p>The environment is a single-region AWS setup intentionally configured with minimal security to simulate risks for assessment. It includes:</p>
+    <ul>
+      <li>One <strong>EC2 instance</strong> running <em>Amazon Linux 2</em>, hosting a demo e-commerce app.</li>
+      <li>An <strong>S3 bucket</strong> with <em>public access enabled</em> for testing exposure risks.</li>
+      <li><strong>No Multi-Factor Authentication (MFA)</strong> for IAM users, including the root account.</li>
+      <li><strong>Weak IAM password policy</strong> (no complexity or case sensitivity requirements).</li>
+      <li><strong>CloudTrail not enabled</strong>, resulting in no API-level activity tracking.</li>
+      <li>Default <strong>Security Group</strong> with open inbound ports (including SSH) for demonstration.</li>
+      <li>Other default configurations as seen on fresh EC2 deployments.</li>
+    </ul>
+    <p>This is a <strong>non-production environment</strong> designed solely to identify risks and validate the GRC framework.</p>
+  </section>
+
+  <section id="workflow">
+    <h2>Project Workflow</h2>
+    <p>This project followed a structured approach to assess risks, align with frameworks, and build a Governance, Risk, and Compliance (GRC) strategy. The key steps were:</p>
+    <ol class="workflow-list">
+      <li>
+        <strong>Set up the AWS Infrastructure</strong><br>
+        Configured a controlled environment with:
+        <ul>
+          <li>EC2 instance running Amazon Linux 2</li>
+          <li>S3 bucket with public access (for testing)</li>
+          <li>No MFA, weak IAM password policy, CloudTrail disabled</li>
+          <li>Default security group rules</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Define the Project Scope</strong><br>
+        Identified key assets (EC2, S3, IAM) and scoped the evaluation to AWS cloud security posture, identity/access management, and operational monitoring.
+      </li>
+      <li>
+        <strong>Run Security Scans</strong><br>
+        Used two tools:
+        <ul>
+          <li><strong>Prowler</strong> – for AWS CIS benchmark checks and misconfiguration detection.</li>
+          <li><strong>Nessus</strong> – for vulnerability scanning of the EC2 instance and network services.</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Conduct Risk Analysis and Map to Frameworks</strong><br>
+        Findings were mapped to:
+        <ul>
+          <li><strong>ISO/IEC 27001:2022</strong> (Information Security Management)</li>
+          <li><strong>NIST Cybersecurity Framework (CSF)</strong></li>
+          <li><strong>COBIT 2019</strong> (Governance and Management Objectives)</li>
+          <li><strong>MITRE ATT&CK</strong> (e.g., T1078.004, T1133, T1562.002)</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Quantify Risks Using FAIR</strong><br>
+        Each critical finding (e.g., Public S3 Buckets, No MFA) was analyzed for financial impact using the FAIR model, resulting in estimated loss ranges.
+      </li>
+      <li>
+        <strong>Design Governance Program</strong><br>
+        Developed a governance structure aligning with all frameworks, including:
+        <ul>
+          <li>CISO-led oversight and risk tracking</li>
+          <li>KPIs for MFA, S3 access, CloudTrail, and patch management</li>
+          <li>Defined escalation, monitoring, and audit procedures</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Communicate Results</strong><br>
+        Presented findings and GRC framework through:
+        <ul>
+          <li>Formal <strong>Presentation</strong> for leadership</li>
+          <li>Written <strong>Reports</strong> (policy, risk analysis, compliance mapping)</li>
+        </ul>
+      </li>
+    </ol>
+  </section>
+
+  <style>
+    /* Align numbered list with rest of text */
+    .workflow-list {
+      margin-left: 1.2rem; /* reduces default indent */
+      padding-left: 1rem;  /* keeps numbers visible but aligned */
+    }
+    .workflow-list li {
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+    .workflow-list ul {
+      margin-top: 0.5rem;
+      margin-left: 1.5rem;
+      list-style: disc;
+    }
+  </style>
 
   <section id="risk">
     <h2>Key Risk Assessment Findings</h2>
@@ -122,6 +283,7 @@
       <li>Implement multi-region CloudTrail logging (€1,000).</li>
       <li>Deploy alerting rules (e.g., failed logins >10).</li>
       <li>Achieve ISO 27001 and NIST CSF certification within 6 months.</li>
+      <li>More details plans can be found in the attachments.</li>
     </ul>
   </section>
 
@@ -196,7 +358,7 @@
   </div>
 
   <footer>
-    <p>Assessed by Khuong Nguyen</p>
+    <p>Conducted by Khuong Nguyen</p>
   </footer>
 
   <script>
